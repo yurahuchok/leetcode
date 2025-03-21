@@ -1,12 +1,7 @@
-type RecipeBook = Record<string, {
-  id: string;
-  ingredients: string[];
-}>
+const recipeBook = new Map<string, string[]>();
 
-let recipeBook: RecipeBook = {};
-
-function canPrepare(recipe: string, chain: string[] = []): boolean {
-  const record = recipeBook[recipe];
+function cookable(recipe: string, chain: string[] = []): boolean {
+  const record = recipeBook.get(recipe);
 
   if (record === undefined) {
     return false;
@@ -16,27 +11,25 @@ function canPrepare(recipe: string, chain: string[] = []): boolean {
     return false;
   }
 
-  const result = record.ingredients.every((ingredient) => canPrepare(ingredient, [...chain, recipe]));
+  const result = record.every((ingredient) => cookable(ingredient, [...chain, recipe]));
 
   if (result === true) {
-    recipeBook[recipe] = {
-      id: recipe,
-      ingredients: [],
-    }
+    recipeBook.set(recipe, []);
   }
 
   return result;
 }
 
 function findAllRecipes(recipes: string[], ingredients: string[][], supplies: string[]): string[] {
-  recipeBook = {};
-
-  [...recipes, ...supplies].forEach((recipe, i) => {
-    recipeBook[recipe] = {
-      id: recipe,
-      ingredients: ingredients[i] ?? [],
-    };
-  });
-
-  return recipes.filter((recipe) => canPrepare(recipe));
+  recipeBook.clear();
+  [...recipes, ...supplies].forEach((recipe, i) => recipeBook.set(recipe, ingredients[i] ?? []));
+  return recipes.filter((recipe) => cookable(recipe));
 };
+
+console.log(
+  findAllRecipes(
+    ["burger","bread","sandwich"],
+    [["sandwich","meat","bread"],["yeast","flour"],["bread","meat"]],
+    ["yeast","flour","meat"],
+  )
+);
