@@ -15,6 +15,8 @@ function cookable(recipe: string, chain: string[] = []): boolean {
 
   if (result === true) {
     recipeBook.set(recipe, []);
+  } else {
+    recipeBook.delete(recipe);
   }
 
   return result;
