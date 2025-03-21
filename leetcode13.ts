@@ -1,4 +1,4 @@
-const map = {
+const map: Record<string, number> = {
   "I": 1,
   "V": 5,
   "X": 10,
@@ -18,13 +18,17 @@ function romanToInt(s: string): number {
   let acc = 0;
 
   for (let i = 0; i < s.length; i++) {
-    if (s[i+1] !== undefined && map[`${s[i]}${s[i+1]}`] !== undefined) {
-      acc += map[`${s[i]}${s[i+1]}`] ?? 0;
-      i++;
-      continue;
+    if (i < s.length -1) {
+      const multiNum = map[`${s[i]}${s[i+1]}`];
+
+      if (multiNum !== undefined) {
+        acc += multiNum;
+        i++;
+        continue;
+      }
     }
 
-    acc += map[s[i]] ?? 0
+    acc += map[s[i]] ?? 0;
   }
 
   return acc;
