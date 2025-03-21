@@ -1,27 +1,28 @@
 function findAllRecipes(recipes: string[], ingredients: string[][], supplies: string[]): string[] {
   const recipeMap = new Map<string, string[]>();
-  
-  const supplied = new Set<string>();
-  const processed = new Set<string>();
+  [...recipes, ...supplies].forEach((r, i) => recipeMap.set(r, ingredients[i] ?? []));
 
-  recipes.forEach((r, i) => recipeMap.set(r, ingredients[i] ?? []));
-  supplies.forEach((s) => supplied.add(s));
+  const cookable = (recipe: string, chain: Set<string> = new Set<string>()) => {
+    const record = recipeMap.get(recipe);
 
-  const cookable = (recipe: string) => {
-    if (supplied.has(recipe)) {
+    if (record === undefined) {
+      return false;
+    }
+
+    if (record.length === 0) {
       return true;
     }
-  
-    const record = recipeMap.get(recipe);
-    if (record === undefined || processed.has(recipe)) {
+
+    if (chain.has(recipe)) {
       return false;
     }
   
-    processed.add(recipe);
-  
-    const result = record.every((ingredient) => cookable(ingredient));
-    if (result) {
-      supplied.add(recipe);
+    const result = record.every((ingredient) => cookable(ingredient, chain.add(recipe)));
+
+    if (result === true) {
+      recipeMap.set(recipe, []);
+    } else {
+      recipeMap.delete(recipe);
     }
   
     return result;
