@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "exec": "tsx"
+  },
   "devDependencies": {
     "tsx": "^4.19.3"
   }
