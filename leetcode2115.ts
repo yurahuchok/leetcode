@@ -31,11 +31,3 @@ function findAllRecipes(recipes: string[], ingredients: string[][], supplies: st
   fillCookBook(recipes, ingredients, supplies);
   return recipes.filter((recipe) => cookable(recipe));
 };
-
-console.log(
-  findAllRecipes(
-    ["burger","bread","sandwich"],
-    [["sandwich","meat","bread"],["yeast","flour"],["bread","meat"]],
-    ["yeast","flour","meat"],
-  )
-);
