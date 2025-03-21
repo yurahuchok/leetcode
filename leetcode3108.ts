@@ -34,6 +34,7 @@ class UnionFind {
       const root = this.find(i);
       if (root !== i) {
         this.w[root] = this.w[root] === null ? w : this.w[root] & w;
+        this.w[i] = null;
       }
     });
   }
