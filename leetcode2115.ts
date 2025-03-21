@@ -1,30 +1,32 @@
-const recipeBook = new Map<string, string[]>();
-
-function cookable(recipe: string, chain: string[] = []): boolean {
-  const record = recipeBook.get(recipe);
-
-  if (record === undefined) {
-    return false;
-  }
-
-  if (chain.includes(recipe)) {
-    return false;
-  }
-
-  const result = record.every((ingredient) => cookable(ingredient, [...chain, recipe]));
-
-  if (result === true) {
-    recipeBook.set(recipe, []);
-  } else {
-    recipeBook.delete(recipe);
-  }
-
-  return result;
-}
-
 function findAllRecipes(recipes: string[], ingredients: string[][], supplies: string[]): string[] {
-  recipeBook.clear();
-  [...recipes, ...supplies].forEach((recipe, i) => recipeBook.set(recipe, ingredients[i] ?? []));
+  const recipeMap = new Map<string, string[]>();
+  
+  const supplied = new Set<string>();
+  const processed = new Set<string>();
+
+  recipes.forEach((r, i) => recipeMap.set(r, ingredients[i] ?? []));
+  supplies.forEach((s) => supplied.add(s));
+
+  const cookable = (recipe: string) => {
+    if (supplied.has(recipe)) {
+      return true;
+    }
+  
+    const record = recipeMap.get(recipe);
+    if (record === undefined || processed.has(recipe)) {
+      return false;
+    }
+  
+    processed.add(recipe);
+  
+    const result = record.every((ingredient) => cookable(ingredient));
+    if (result) {
+      supplied.add(recipe);
+    }
+  
+    return result;
+  };
+
   return recipes.filter((recipe) => cookable(recipe));
 };
 
