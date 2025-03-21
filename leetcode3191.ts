@@ -1,3 +1,10 @@
+/**
+ * Topics:
+ * - The solution just goes from left to right filling flipping next three elements if zero is encountered. The solution
+ *   might not guarantee the minimum operation count described in the problem. It would be nice to have a way to
+ *   mathematically prove that the solution always provides minimum operation count.
+ */
+
 function minOperations(nums: number[]): number {
   // if (nums.find((val) => val === 0) === undefined) {
   //   return 0;

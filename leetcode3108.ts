@@ -1,3 +1,8 @@
+/**
+ * Topics:
+ * - Union Find data structure. Also called Disjoint Set Union data structure.
+ */
+
 class UnionFind {
   protected p: number[];
 
