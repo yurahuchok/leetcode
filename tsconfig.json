@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "lib": ["ES2023", "DOM"],
+    "moduleResolution": "node",
+    "isolatedModules": true,
+    "moduleDetection": "force",
+  }
+}

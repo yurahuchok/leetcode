@@ -1,4 +1,4 @@
-class UnionFind2 {
+class UnionFind {
   public p: number[];
 
   public edges: boolean[][];
@@ -28,7 +28,7 @@ class UnionFind2 {
 }
 
 function countCompleteComponents(n: number, edges: number[][]): number {
-  const graph = new UnionFind2(n);
+  const graph = new UnionFind(n);
   edges.forEach((edge) => graph.union(edge[0], edge[1]));
   graph.normalize();
 
