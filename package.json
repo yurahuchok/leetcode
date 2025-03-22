@@ -1,8 +1,14 @@
 {
+  "type": "module",
   "scripts": {
-    "exec": "tsx"
+    "exec": "tsx run.ts"
   },
   "devDependencies": {
+    "@types/minimist": "^1.2.5",
+    "@types/node": "^22.13.11",
     "tsx": "^4.19.3"
+  },
+  "dependencies": {
+    "minimist": "^1.2.8"
   }
 }

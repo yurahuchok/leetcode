@@ -44,9 +44,7 @@ function countCompleteComponents(n: number, edges: number[][]): number {
   return results.filter((r) => r === true).length;
 };
 
-console.log(
-  countCompleteComponents(
-    6,
-    [[0,1],[0,2],[1,2],[3,4]]
-  )
+export default countCompleteComponents(
+  6,
+  [[0,1],[0,2],[1,2],[3,4]]
 );
