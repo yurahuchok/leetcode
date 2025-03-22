@@ -10,7 +10,7 @@ if (file === undefined) {
 }
 
 async function exec() {
-  const path = resolve(process.cwd(), file);
+  const path = resolve(process.cwd(), "problems", file);
 
   await fs.readFile(path, "utf-8");
   const module = await import(path);
