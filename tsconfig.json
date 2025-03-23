@@ -4,6 +4,7 @@
     "moduleResolution": "node",
     "isolatedModules": true,
     "moduleDetection": "force",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "strict": true,
   }
 }
