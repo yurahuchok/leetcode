@@ -22,28 +22,30 @@ class Graph {
 
 
 class Dijkstra {
-  protected sNodes: Map<number, { from: number | null, cost: number, explored: boolean }> = new Map();
+  protected sNodes: { index: number, from: number | null, cost: number, explored: boolean }[] = [];
 
   protected sWays: Map<number, { ways: number, cost: number }> = new Map();
 
   constructor(protected graph: Graph) {}
 
   public process(start: number) {
-    let sCurrent = this.sNodes.get(start);
+    let sIndex = this.sNodes.findIndex((val) => val.explored === false && val.index === start);
+    let sCurrent = this.sNodes[sIndex];
 
     if (sCurrent === undefined) {
-      sCurrent = { from: null, cost: 0, explored: true };
+      sCurrent = { index: start, from: null, cost: 0, explored: true };
+      this.sNodes[0] = sCurrent;
       this.sWays.set(start, { ways: 1, cost: 0 });
+    } else {
+      this.sNodes[sIndex] = { ...sCurrent, explored: true };
     }
 
-    this.sNodes.set(start, { ...sCurrent, explored: true });
-
     this.graph.node(start)?.forEach((path) => {
-      const sPath = this.sNodes.get(path.index);
+      const sPath = this.sNodes.find((val) => val.index === path.index);
       const sCost = path.cost + sCurrent.cost;
 
       if (sPath === undefined || sCost <= sPath.cost) {
-        this.sNodes.set(path.index, { from: start, cost: sCost, explored: false });
+        this.sNodes.push({ index: path.index, from: start, cost: sCost, explored: false });
         
         const sWays = this.sWays.get(path.index);
         if (sWays === undefined || sCost < sWays.cost) {
@@ -57,11 +59,11 @@ class Dijkstra {
     let smallestVal: number = Infinity;
     let smallestIndex: number | null = null;
     
-    this.sNodes.forEach((val, index) => {
+    this.sNodes.forEach((val) => {
       if (val.explored === false) {
         if (val.cost < smallestVal) {
           smallestVal = val.cost;
-          smallestIndex = index;
+          smallestIndex = val.index;
         }
       }
     });
