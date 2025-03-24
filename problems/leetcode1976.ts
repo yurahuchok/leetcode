@@ -18,64 +18,77 @@ class Graph {
   public node(index: number) {
     return this.nodes.get(index);
   }
+
+  public length() {
+    return this.nodes.size;
+  }
 }
 
-
 class Dijkstra {
-  protected sNodes: { index: number, from: number | null, cost: number, explored: boolean }[] = [];
+  protected paths: Map<number, { from: number | null, cost: number }> = new Map();
 
-  protected sWays: Map<number, { ways: number, cost: number }> = new Map();
+  protected tasks: { index: number, currentCost: number, source: number }[] = [];
+
+  protected ways: Map<number, { count: number }> = new Map();
 
   constructor(protected graph: Graph) {}
 
-  public process(start: number) {
-    let sIndex = this.sNodes.findIndex((val) => val.explored === false && val.index === start);
-    let sCurrent = this.sNodes[sIndex];
-
-    if (sCurrent === undefined) {
-      sCurrent = { index: start, from: null, cost: 0, explored: true };
-      this.sNodes[0] = sCurrent;
-      this.sWays.set(start, { ways: 1, cost: 0 });
-    } else {
-      this.sNodes[sIndex] = { ...sCurrent, explored: true };
+  public task() {
+    const task = this.tasks.pop();
+    if (task === undefined) {
+      return;
     }
 
-    this.graph.node(start)?.forEach((path) => {
-      const sPath = this.sNodes.find((val) => val.index === path.index);
-      const sCost = path.cost + sCurrent.cost;
+    if (task.index === this.graph.length() - 1) {
+      return;
+    }
 
-      if (sPath === undefined || sCost <= sPath.cost) {
-        this.sNodes.push({ index: path.index, from: start, cost: sCost, explored: false });
-        
-        const sWays = this.sWays.get(path.index);
-        if (sWays === undefined || sCost < sWays.cost) {
-          this.sWays.set(path.index, { ways: 1, cost: sCost });
-        } else if (sWays.cost === sCost) {
-          this.sWays.set(path.index, { ways: sWays.ways + 1, cost: sCost});
-        }
+    if (task.index === 0) {
+      this.paths.set(0, ({ from: null, cost: 0 }));
+    }
+
+    this.graph.node(task.index)?.forEach((node) => {
+      if (node.index === task.source) {
+        return;
+      }
+
+      const nodePath = this.paths.get(node.index);
+      const newCost = task.currentCost + node.cost
+
+      if (nodePath === undefined || newCost < nodePath.cost) {
+        this.paths.set(node.index, { from: task.index, cost: newCost });
+        this.tasks.push({ index: node.index, currentCost: newCost, source: task.index });
+        this.ways.set(node.index, { count: 1 });
+
+      } else if (newCost === nodePath.cost) {
+        this.tasks.push({ index: node.index, currentCost: newCost, source: task.index });
+        this.ways.set(node.index, { count: (this.ways.get(node.index)?.count ?? 0) + 1 });
       }
     });
 
-    let smallestVal: number = Infinity;
-    let smallestIndex: number | null = null;
-    
-    this.sNodes.forEach((val) => {
-      if (val.explored === false) {
-        if (val.cost < smallestVal) {
-          smallestVal = val.cost;
-          smallestIndex = val.index;
-        }
+    this.tasks.sort((a, b) => {
+      if (a.currentCost < b.currentCost) {
+        return -1;
       }
-    });
 
-    if (smallestIndex !== null) {
-      this.process(smallestIndex);
-    }
+      if (a.currentCost > b.currentCost) {
+        return 1;
+      }
+
+      return 0;
+    }).reverse();
+
+    this.task();
+  }
+
+  public process() {
+    this.tasks.push({ index: 0, currentCost: 0, source: 0 });
+    this.task();
   }
 
   public findCountOfMinPaths(start: number, end: number) {
-    this.process(start);
-    return this.sWays.get(end)?.ways;
+    this.process();
+    return this.ways.get(end)?.count ?? 0;
   }
 }
 
