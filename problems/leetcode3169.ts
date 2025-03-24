@@ -6,22 +6,14 @@ function countDays(days: number, meetings: number[][]): number {
   });
 
   for (let i = 0; i < meetings.length - 1; i++) {
-    const nextVal = meetings[i + 1][0];
-    for (let n = meetings[i][0]; n <= meetings[i][1]; n++) {
-      if (n >= nextVal) {
-        meetings[i + 1][0] = meetings[i][0];
-        meetings[i + 1][1] = Math.max(meetings[i][1], meetings[i + 1][1]);
-        meetings[i] = [];
-        break;
-      }
+    if (meetings[i][1] >= meetings[i + 1][0]) {
+      meetings[i + 1][0] = meetings[i][0];
+      meetings[i + 1][1] = Math.max(meetings[i][1], meetings[i + 1][1]);
+      delete meetings[i];
     }
   }
 
   const busyDays = meetings.reduce((acc, meeting) => {
-    if (meeting.length === 0) {
-      return acc;
-    }
-
     return acc + (meeting[1] - meeting[0] + 1);
   }, 0);
 
