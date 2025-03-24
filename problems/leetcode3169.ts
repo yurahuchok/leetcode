@@ -1,13 +1,13 @@
 function countDays(days: number, meetings: number[][]): number {
-  const d = Array(days).fill(true);
-
+  const off: Map<number, boolean> = new Map();
+  
   meetings.forEach((meeting) => {
     for (let i = meeting[0]; i <= meeting[1]; i++) {
-      d[i - 1] = false;
+      off.set(i, true);
     }
   });
 
-  return d.filter((val) => val === true).length;
+  return days - off.size;
 };
 
 export default(countDays(10, [[5,7],[1,3],[9,10]]));
