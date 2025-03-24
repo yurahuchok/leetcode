@@ -1,5 +1,7 @@
 type NodePath = { index: number; cost: number };
 
+const MOD = 1e9 + 7;
+
 class Graph {
   protected nodes: Map<number, NodePath[]> = new Map();
 
@@ -58,11 +60,12 @@ class Dijkstra {
       if (nodePath === undefined || newCost < nodePath.cost) {
         this.paths.set(node.index, { from: task.index, cost: newCost });
         this.tasks.push({ index: node.index, currentCost: newCost, source: task.index });
-        this.ways.set(node.index, { count: 1 });
+        // this.ways.set(node.index, { count: 1 });
+        this.ways.set(node.index, { count: (this.ways.get(task.index)?.count ?? 0) });
 
       } else if (newCost === nodePath.cost) {
-        this.tasks.push({ index: node.index, currentCost: newCost, source: task.index });
-        this.ways.set(node.index, { count: (this.ways.get(node.index)?.count ?? 0) + 1 });
+        // this.tasks.push({ index: node.index, currentCost: newCost, source: task.index });
+        this.ways.set(node.index, { count: ((this.ways.get(node.index)?.count ?? 0) + (this.ways.get(task.index)?.count ?? 0)) % MOD });
       }
     });
 
@@ -83,6 +86,7 @@ class Dijkstra {
 
   public process() {
     this.tasks.push({ index: 0, currentCost: 0, source: 0 });
+    this.ways.set(0, { count: 1 });
     this.task();
   }
 
