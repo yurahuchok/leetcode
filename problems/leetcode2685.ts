@@ -1,3 +1,7 @@
+/**
+ * TODO. Improve performance. Investigate alternative solutions.
+ */
+
 class UnionFind {
   public p: number[];
 
