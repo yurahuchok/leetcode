@@ -30,17 +30,30 @@ function find132pattern(nums: number[]): boolean {
 
     if (currentVal > nums[lowestIndex] + 1 && (highestIndex === undefined || currentVal > nums[highestIndex])) {
       highestIndex = i;
-      
-      const [prevLowest, prevHighest] = tasks.pop() ?? [Infinity, -Infinity];
 
-      // Does previous interval intersect with current interval.
-      if (Math.max(prevLowest, nums[lowestIndex]) < Math.min(prevHighest, nums[highestIndex])) {
-        tasks.push([
-          Math.min(prevLowest, nums[lowestIndex]),
-          Math.max(prevHighest, nums[highestIndex]),
-        ]);
-      } else {
-        tasks.push([prevLowest, prevHighest]);
+      let currentLowestVal = nums[lowestIndex];
+      let currentHighestVal = nums[highestIndex];
+      
+      // Merge previous intervals which intersect with current interval.
+      let intersects = false;
+      for (let k = 0; k < tasks.length; k++) {
+        if (tasks[k][0] === currentLowestVal && tasks[k][1] === currentHighestVal) {
+          intersects = true;
+          continue;
+        }
+
+        if (Math.max(tasks[k][0], currentLowestVal) < Math.min(tasks[k][1], currentHighestVal)) {
+          currentLowestVal = Math.min(tasks[k][0], currentLowestVal);
+          currentHighestVal = Math.max(tasks[k][1], currentHighestVal);
+
+          tasks[k] = [currentLowestVal, currentHighestVal];
+
+          k = -1;
+          intersects = true;
+        }
+      }
+
+      if (!intersects) {
         tasks.push([nums[lowestIndex], nums[highestIndex]]);
       }
 
@@ -53,10 +66,10 @@ function find132pattern(nums: number[]): boolean {
 
 export default find132pattern(
   // [3,5,0,3,3],
-  // [10,15,0,5,8],
+  [10,15,0,5,8],
   // [3,5,0,3,1],
   // [3,5,0,3,4],
   // [11,14,10,9,8,7,9,8]
   // [12,15,0,7,9,30]
-  [2,5,-10,-3,-1,20]
+  // [2,5,-10,-3,-1,20]
 );
