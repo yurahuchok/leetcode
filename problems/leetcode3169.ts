@@ -1,9 +1,5 @@
 function countDays(days: number, meetings: number[][]): number {
-  meetings.sort(([start1, end1], [start2, end2]) => {
-    if (start1 < start2) { return -1 }
-    if (start1 > start2) { return 1 }
-    return 0;
-  });
+  meetings.sort(([start1], [start2]) => start1 - start2);
 
   for (let i = 0; i < meetings.length - 1; i++) {
     if (meetings[i][1] >= meetings[i + 1][0]) {

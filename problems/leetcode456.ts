@@ -1,54 +1,33 @@
-type Task = {
-  start?: number;
-  finish?: number;
-};
+function find132pattern(nums: number[]): boolean {
+  const investigation: number[][] = [];
+  let lowest = undefined;
 
-function find132pattern(n: number[]): boolean {
-  const tasks: Task[] = [];
+  for (let i = 0; i < nums.length; i++) {
+    const curr = nums[i];
 
-  tasks.push({
-    start: undefined,
-    finish: undefined,
-  });
+    for (let k = 0; k < investigation.length; k++) {
+      if (curr > investigation[k][0] && curr < investigation[k][1]) {
+        return true;
+      }
+    }
 
-  while (tasks.length > 0) {
-    const task = tasks.pop();
-    const nums = n.slice(task?.start, task?.finish);
-
-    if (nums.length < 3) {
+    if (lowest === undefined) {
+      lowest = curr;
       continue;
     }
 
-    const iMax = nums.reduce((acc, num, i) => nums[acc] <= num ? i : acc, 0);
-
-    const left = nums.slice(0, iMax);
-    const right = nums.slice(iMax + 1);
-
-    if (left.length === 0) {
-      tasks.push({ start: iMax + 1 });
+    if (curr < lowest) {
+      lowest = curr;
       continue;
     }
 
-    if (right.length === 0) {
-      tasks.push({ start: task?.start, finish: iMax });
+    if (curr > lowest + 1) {
+      investigation.push([lowest, curr]);
       continue;
     }
-
-    const lowest = Math.min(...left);
-    const highest = Math.max(...right);
-
-    if (lowest < highest) {
-      return true;
-    }
-
-    tasks.push({ start: iMax + 1 });
-    tasks.push({ start: task?.start, finish: iMax });
   }
 
   return false;
 };
 
-export default find132pattern(
-  // [1,2,3,4]
-  [1,1,1,1,11,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-);
+export default find132pattern([-2,1,2,-2,1,2]);
