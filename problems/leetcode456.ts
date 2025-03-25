@@ -1,3 +1,7 @@
+/**
+ * TODO. Improve performance.
+ */
+
 function find132pattern(nums: number[]): boolean {
   let investigations: number[][] = [];
 
