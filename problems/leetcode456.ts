@@ -1,5 +1,5 @@
 /**
- * TODO. Improve performance.
+ * TODO. Improve performance. Investigate solution using Stack.
  */
 
 function find132pattern(nums: number[]): boolean {
