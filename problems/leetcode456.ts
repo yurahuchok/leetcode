@@ -5,8 +5,8 @@
 function find132pattern(nums: number[]): boolean {
   let tasks: number[][] = [];
 
-  let lowest = undefined;
-  let highest = undefined;
+  let lowestIndex = undefined;
+  let highestIndex = undefined;
 
   for (let i = 0; i < nums.length; i++) {
     const currentVal = nums[i];
@@ -17,29 +17,29 @@ function find132pattern(nums: number[]): boolean {
       }
     }
 
-    if (lowest === undefined) {
-      lowest = i;
+    if (lowestIndex === undefined) {
+      lowestIndex = i;
       continue;
     }
 
-    if (currentVal < nums[lowest]) {
-      lowest = i;
-      highest = undefined;
+    if (currentVal < nums[lowestIndex]) {
+      lowestIndex = i;
+      highestIndex = undefined;
       continue;
     }
 
-    if (currentVal > nums[lowest] + 1 && (highest === undefined || currentVal > nums[highest])) {
-      highest = i;
+    if (currentVal > nums[lowestIndex] + 1 && (highestIndex === undefined || currentVal > nums[highestIndex])) {
+      highestIndex = i;
       
       const [prevLowest, prevHighest] = tasks.pop() ?? [Infinity, -Infinity];
-
-      if (prevLowest <= nums[lowest] && prevHighest >= nums[highest]) {
+      
+      if (prevLowest <= nums[lowestIndex] && prevHighest >= nums[highestIndex]) {
         tasks.push([prevLowest, prevHighest]);
-      } else if (nums[lowest] <= prevLowest && nums[highest] >= prevHighest) {
-        tasks.push([nums[lowest], nums[highest]]);
+      } else if (nums[lowestIndex] <= prevLowest && nums[highestIndex] >= prevHighest) {
+        tasks.push([nums[lowestIndex], nums[highestIndex]]);
       } else {
         tasks.push([prevLowest, prevHighest]);
-        tasks.push([nums[lowest], nums[highest]]);
+        tasks.push([nums[lowestIndex], nums[highestIndex]]);
       }
 
       continue;
