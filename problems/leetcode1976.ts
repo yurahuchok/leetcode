@@ -1,3 +1,8 @@
+/**
+ * TODO. Use DAG with DP. Maybe improve peformance.
+ * Hint 2 Using those edges only the graph turns into a dag now we just need to know the number of ways to get from node 0 to node n - 1 on a dag using dp
+ */
+
 type NodePath = { index: number; cost: number };
 
 const MOD = 1e9 + 7;
