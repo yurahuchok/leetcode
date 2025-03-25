@@ -32,11 +32,13 @@ function find132pattern(nums: number[]): boolean {
       highestIndex = i;
       
       const [prevLowest, prevHighest] = tasks.pop() ?? [Infinity, -Infinity];
-      
-      if (prevLowest <= nums[lowestIndex] && prevHighest >= nums[highestIndex]) {
-        tasks.push([prevLowest, prevHighest]);
-      } else if (nums[lowestIndex] <= prevLowest && nums[highestIndex] >= prevHighest) {
-        tasks.push([nums[lowestIndex], nums[highestIndex]]);
+
+      // Does previous interval intersect with current interval.
+      if (Math.max(prevLowest, nums[lowestIndex]) < Math.min(prevHighest, nums[highestIndex])) {
+        tasks.push([
+          Math.min(prevLowest, nums[lowestIndex]),
+          Math.max(prevHighest, nums[highestIndex]),
+        ]);
       } else {
         tasks.push([prevLowest, prevHighest]);
         tasks.push([nums[lowestIndex], nums[highestIndex]]);
