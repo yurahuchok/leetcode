@@ -1,28 +1,32 @@
 function find132pattern(nums: number[]): boolean {
-  const investigation: number[][] = [];
+  let investigations: number[][] = [];
+
   let lowest = undefined;
+  let highest = undefined;
 
   for (let i = 0; i < nums.length; i++) {
     const curr = nums[i];
 
-    for (let k = 0; k < investigation.length; k++) {
-      if (curr > investigation[k][0] && curr < investigation[k][1]) {
+    for (let k = 0; k < investigations.length; k++) {
+      if (curr > nums[investigations[k][0]] && curr < nums[investigations[k][1]]) {
         return true;
       }
     }
 
     if (lowest === undefined) {
-      lowest = curr;
+      lowest = i;
       continue;
     }
 
-    if (curr < lowest) {
-      lowest = curr;
+    if (curr < nums[lowest]) {
+      highest = undefined;
+      lowest = i;
       continue;
     }
 
-    if (curr > lowest + 1) {
-      investigation.push([lowest, curr]);
+    if (curr > nums[lowest] + 1 && (highest === undefined || curr > nums[highest])) {
+      highest = i;
+      investigations.push([lowest, highest]);
       continue;
     }
   }
@@ -30,4 +34,5 @@ function find132pattern(nums: number[]): boolean {
   return false;
 };
 
-export default find132pattern([-2,1,2,-2,1,2]);
+// export default find132pattern([4,7,3,2,1,0,2,1]);
+export default find132pattern([3,1,4,2]);
