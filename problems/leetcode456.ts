@@ -26,6 +26,20 @@ function find132pattern(nums: number[]): boolean {
 
     if (curr > nums[lowest] + 1 && (highest === undefined || curr > nums[highest])) {
       highest = i;
+
+      
+      if (investigations.length > 0) {
+        const peek = investigations[investigations.length - 1];
+
+        if (nums[highest] > nums[peek[1]] && nums[lowest] < nums[peek[0]]) {
+          investigations.pop(); 
+        }
+
+        if (peek[0] === lowest) {
+          investigations.pop();
+        }
+      }
+
       investigations.push([lowest, highest]);
       continue;
     }
@@ -33,6 +47,3 @@ function find132pattern(nums: number[]): boolean {
 
   return false;
 };
-
-// export default find132pattern([4,7,3,2,1,0,2,1]);
-export default find132pattern([3,1,4,2]);
