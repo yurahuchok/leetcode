@@ -10,7 +10,7 @@ class Traverser {
   }
 
   traverse(queries: number[], pos: number[] = [0,0]) {
-    let proceed: boolean = false;
+    let proceedQueries: number[] = [];
 
     let [x, y] = pos;
 
@@ -23,18 +23,20 @@ class Traverser {
     }
 
     queries.forEach((val) => {
+      this.results.set(val, (this.results.get(val) ?? 0));
+
       if (this.grid[x][y] < val) {
         this.results.set(val, (this.results.get(val) ?? 0) + 1);
         this.xyCompleted.add(`${x};${y}`);
-        proceed = true;
+        proceedQueries.push(val);
       }
     });
 
-    if (proceed) {
-      this.traverse(queries, [x + 1, y]);
-      this.traverse(queries, [x - 1, y]);
-      this.traverse(queries, [x, y + 1]);
-      this.traverse(queries, [x, y - 1]);
+    if (proceedQueries.length > 0) {
+      this.traverse(proceedQueries, [x + 1, y]);
+      this.traverse(proceedQueries, [x, y + 1]);
+      this.traverse(proceedQueries, [x - 1, y]);
+      this.traverse(proceedQueries, [x, y - 1]);
     }
   }
 }
@@ -43,12 +45,12 @@ function maxPoints(grid: number[][], queries: number[]): number[] {
   const traverser = new Traverser(grid);
   traverser.traverse(queries);
 
-  console.log(traverser.getResults());
-
-  return [];
+  return Array.from(traverser.getResults().values());
 };
 
 export default maxPoints(
   [[1,2,3],[2,5,7],[3,5,1]],
-  [5],
+  [5,6,2],
+  // [[5,2,1],[1,1,2]],
+  // [3]
 );
