@@ -10,7 +10,7 @@ class Traverser {
   }
 
   traverse(queries: number[], pos: number[] = [0,0]) {
-    let proceedQueries: number[] = [];
+    const proceedQueries: number[] = [];
 
     let [x, y] = pos;
 
@@ -18,16 +18,16 @@ class Traverser {
       return;
     }
 
-    if (this.xyCompleted.has(`${x};${y}`)) {
-      return;
-    }
-
     queries.forEach((val) => {
       this.results.set(val, (this.results.get(val) ?? 0));
 
+      if (this.xyCompleted.has(`${val}:${x};${y}`)) {
+        return;
+      }
+
       if (this.grid[x][y] < val) {
         this.results.set(val, (this.results.get(val) ?? 0) + 1);
-        this.xyCompleted.add(`${x};${y}`);
+        this.xyCompleted.add(`${val}:${x};${y}`);
         proceedQueries.push(val);
       }
     });
@@ -35,8 +35,8 @@ class Traverser {
     if (proceedQueries.length > 0) {
       this.traverse(proceedQueries, [x + 1, y]);
       this.traverse(proceedQueries, [x, y + 1]);
-      this.traverse(proceedQueries, [x - 1, y]);
-      this.traverse(proceedQueries, [x, y - 1]);
+      // this.traverse(proceedQueries, [x, y - 1]);
+      // this.traverse(proceedQueries, [x - 1, y]);
     }
   }
 }
